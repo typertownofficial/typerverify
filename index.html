@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discord Authentication</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: 'Prompt', sans-serif;
+    overflow: hidden;
+    background-color: #030814;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.bg {
+    position: absolute;
+    top: -5%;
+    left: -5%;
+    width: 110%;
+    height: 110%;
+    background-image: url('https://cdn.discordapp.com/attachments/1448595217581084783/1497953780019499108/wmremove-transformed_6.png?ex=69f0b72b&is=69ef65ab&hm=14dbb6eb1a2abfc9fdfb19b34ebc9e77f84ce5443921b0a35fae3e7709eb3d05&');
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+    animation: tweenBg 15s ease-in-out infinite alternate;
+}
+@keyframes tweenBg {
+    0% { transform: scale(1) translate(0, 0); }
+    100% { transform: scale(1.08) translate(-10px, 10px); }
+}
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(3, 15, 45, 0.7) 0%, rgba(0, 70, 160, 0.4) 100%);
+    z-index: 2;
+}
+.glass-panel {
+    position: relative;
+    z-index: 3;
+    background: rgba(10, 35, 90, 0.25);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(120, 210, 255, 0.25);
+    border-radius: 28px;
+    padding: 50px 40px;
+    width: 90%;
+    max-width: 420px;
+    text-align: center;
+    color: #ffffff;
+}
+.logo {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 35px;
+}
+.btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+button {
+    font-family: 'Prompt', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 16px 20px;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+.btn-info {
+    background: rgba(255, 255, 255, 0.08);
+    color: #a3ccff;
+    border: 1px solid rgba(163, 204, 255, 0.3);
+}
+.btn-info:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+.btn-login {
+    background: linear-gradient(90deg, rgba(0, 110, 255, 0.75), rgba(0, 180, 255, 0.75));
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.btn-login:hover {
+    background: linear-gradient(90deg, rgba(0, 110, 255, 0.9), rgba(0, 180, 255, 0.9));
+    transform: translateY(-2px);
+}
+.success-icon {
+    width: 85px;
+    height: 85px;
+    background: rgba(0, 255, 136, 0.15);
+    border: 1px solid rgba(0, 255, 136, 0.4);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 25px auto;
+    color: #00ff88;
+    font-size: 45px;
+}
+h2 {
+    margin: 0 0 12px 0;
+    font-weight: 600;
+    color: #e6f2ff;
+    font-size: 26px;
+}
+p {
+    font-size: 15px;
+    color: #9bbbe0;
+    line-height: 1.7;
+    margin-bottom: 0;
+}
+.view {
+    display: none;
+}
+.view.active {
+    display: block;
+    animation: fadeIn 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 10;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.modal-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+.modal-content {
+    background: rgba(10, 25, 60, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(100, 180, 255, 0.3);
+    border-radius: 20px;
+    padding: 30px;
+    width: 80%;
+    max-width: 350px;
+    text-align: center;
+}
+.modal-content h3 {
+    margin: 0 0 15px 0;
+    color: #ffffff;
+}
+.modal-content p {
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+.btn-close {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 10px 30px;
+}
+.btn-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="overlay"></div>
+
+<div class="glass-panel">
+    <div id="loginView" class="view active">
+        <img src="https://cdn.discordapp.com/attachments/1448595217581084783/1498430418184044666/66_2BF608D.png?ex=69f12193&is=69efd013&hm=3f0171b487cb312b39671e115da9761688f858aadb2bc6ed82dfc8d60596ad8a&" class="logo" alt="Logo">
+        <div class="btn-group">
+            <button class="btn-info" onclick="toggleModal(true)">ข้อมูลการขออนุญาตเข้าถึง Profile</button>
+            <button class="btn-login" onclick="window.location.href='http://127.0.0.1:5000/login'">ล็อคอินผ่าน Discord</button>
+        </div>
+    </div>
+
+    <div id="successView" class="view">
+        <div class="success-icon">✓</div>
+        <h2>ยืนยันสำเร็จ</h2>
+        <p>ระบบได้ทำการเชื่อมต่อและดึงข้อมูลโปรไฟล์จาก Discord ของคุณเรียบร้อยแล้ว การยืนยันตัวตนเสร็จสมบูรณ์และพร้อมสำหรับการใช้งาน</p>
+    </div>
+</div>
+
+<div class="modal-overlay" id="infoModal">
+    <div class="modal-content">
+        <h3>การเข้าถึงข้อมูล</h3>
+        <p>แอปพลิเคชันจะทำการขอสิทธิ์เพื่ออ่านข้อมูลพื้นฐานของคุณบน Discord ได้แก่ ชื่อผู้ใช้งาน (Username), รูปประจำตัว (Avatar) และรหัสประจำตัว (User ID) เพื่อใช้ในการตรวจสอบและยืนยันตัวตนเข้าสู่ระบบ</p>
+        <button class="btn-close" onclick="toggleModal(false)">ปิดหน้าต่าง</button>
+    </div>
+</div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('success') === 'true') {
+        document.getElementById('loginView').classList.remove('active');
+        document.getElementById('successView').classList.add('active');
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    function toggleModal(show) {
+        const modal = document.getElementById('infoModal');
+        if (show) {
+            modal.classList.add('show');
+        } else {
+            modal.classList.remove('show');
+            setTimeout(() => { modal.style.display = 'none'; }, 300);
+        }
+    }
+</script>
+</body>
+</html>
